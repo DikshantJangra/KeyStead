@@ -1,0 +1,9 @@
+.references/
+.venv/
+data/
+.env
+**/__pycache__
+.pytest_cache/
+tests/
+graft/
+.ruff_cache/
