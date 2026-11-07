@@ -1,6 +1,6 @@
 # Keystead gate config. Lives on the client's side. First matching rule wins, default deny.
 switch:
-  room: keystead-clientsite-acc1          # room name, resolved to room_id at start
+  room: keystead-clientsite-10d2          # room name, resolved to room_id at start
 gate:
   name: keystead                     # the gate's Switch agent name (@keystead)
   proposal_ttl_minutes: 30

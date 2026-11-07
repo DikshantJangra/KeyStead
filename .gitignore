@@ -9,3 +9,17 @@ __pycache__/
 graft/
 .ignore
 .DS_Store
+demo-video/
+demo video/
+demo-video
+demo video
+*.mp4
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+node_modules/
+.next/
+out/
+*.testrun*
+data.testrun/
+config/*.testrun.yaml

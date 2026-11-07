@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #fbfbfd;
+  --foreground: #18181b;
+  --card-bg: #ffffff;
+  --border-subtle: #e4e4e7;
+  --accent: #0f172a;
+}
+
+body {
+  color: #18181b;
+  background-color: #fbfbfd;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f4f4f5;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa;
+}
+
+/* Micro-craft interfaces.dev styles */
+.text-balance {
+  text-wrap: balance;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Subtle light dither & dot patterns */
+.bg-dither-pattern {
+  background-image: radial-gradient(rgba(24, 24, 27, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.bg-grid-light {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(24, 24, 27, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(24, 24, 27, 0.04) 1px, transparent 1px);
+}
+
+.bg-bayer-dither {
+  background-image: radial-gradient(#d4d4d8 0.75px, transparent 0.75px), radial-gradient(#d4d4d8 0.75px, #fbfbfd 0.75px);
+  background-size: 6px 6px;
+  background-position: 0 0, 3px 3px;
+}
+
+/* Strict focus visible ring */
+*:focus-visible {
+  outline: 2px solid #18181b;
+  outline-offset: 2px;
+}
