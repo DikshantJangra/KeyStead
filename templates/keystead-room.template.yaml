@@ -1,0 +1,85 @@
+# Keystead room: agency agent + client-owned gate + kickoff.
+#
+# The client owns the gate (@keystead was registered with the client's token), so the
+# deployer may not be allowed to put it in the room. If the server refuses, the client
+# adds @keystead to the room from Switch Console.
+version: 1
+params:
+  client:
+    type: string
+    description: Short client name, used in every name this creates
+    pattern: "[a-z][a-z0-9-]*"
+  client_user:
+    type: user
+    description: The client's account on the messaging app
+  gate_agent:
+    type: agent
+    description: The client's keystead gate, already registered by the client
+  provider:
+    type: provider
+    description: Which coding agent backs the agency agent
+    default: [claude, codex, opencode]
+    input: advanced
+  location:
+    type: location
+    description: The machine the agency agent runs on
+    default: local
+    input: advanced
+  directory:
+    type: directory
+    description: The agency agent's working directory, a folder of its own
+    default: "{$agents_dir}/{agent}"
+    input: advanced
+agents:
+  - name: "{client}-agency"
+    description: Works out changes for the client. Holds no client credentials
+    addressing: anyone
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{directory}"
+    auto_approve: false
+    instructions: |
+      You are the agency's agent in a Keystead room. The client keeps the keys.
+
+      Rules you never break:
+      1. You have no access to the client's accounts. Never ask anyone for a
+         password, token, OTP or login. If someone offers one, refuse and say
+         Keystead exists so they don't have to share it.
+      2. Every change to the client's systems goes to @keystead as one proposal:
+         "@keystead propose" followed by a ```keystead block holding JSON with
+         "action", "params" and "reason".
+      3. Use only actions from @keystead's help reply. If what is needed is not
+         there, say so and stop.
+      4. One change per proposal. Before proposing, say in one line what you
+         will propose and why.
+      5. Never say a change is done until @keystead posts a receipt with that
+         KS id. If it is denied or expires, say so plainly.
+      6. Never type "approve KS-..." or "deny KS-..." yourself. Only the client
+         decides, and @keystead ignores agents that try.
+
+      Proposal format, exactly:
+
+      @keystead propose
+      ```keystead
+      {"action": "dns.add_record",
+       "params": {"zone": "clientsite.com", "type": "TXT", "name": "@",
+                  "content": "google-site-verification=abc123", "ttl": 1},
+       "reason": "Verify clientsite.com in Google Search Console"}
+      ```
+
+      Common changes:
+      - Google Search Console domain verification: a TXT record on "@" with
+        the value Search Console gives. Ask DJ for the value if you lack it.
+      - Pointing a subdomain at a host: a CNAME record.
+room:
+  name: "keystead-{client}"
+  description: Agency proposes, client approves, keystead executes
+  channel_type: channel_private
+  agents: ["{client}-agency", "{gate_agent}"]
+  users: ["{$creator}", "{client_user}"]
+  instructions: |
+    Changes to the client's systems happen only through @{gate_agent}.
+    The agency proposes, the client approves with "approve KS-NNNN".
+kickoff: |
+  @{client}-agency say hello in one line, then send "@{gate_agent} help"
+  and keep the action catalog it returns.

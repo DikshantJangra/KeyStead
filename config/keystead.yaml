@@ -1,0 +1,39 @@
+# Keystead gate config. Lives on the client's side. First matching rule wins, default deny.
+switch:
+  room: keystead-clientsite-acc1          # room name, resolved to room_id at start
+gate:
+  name: keystead                     # the gate's Switch agent name (@keystead)
+  proposal_ttl_minutes: 30
+people:                              # display names, resolved to participant ids at start
+  approvers: [client]                # people only; the gate refuses to start if one is an agent
+  proposers: [clientsite-agency, dj]
+connectors:
+  cloudflare_dns:
+    secret: cloudflare_token         # `keystead secret set cloudflare_token`
+    zones: [clientsite.com]
+  # octodns_dns:                     # any other DNS provider (disable cloudflare_dns first)
+  #   secret: route53_secret
+  #   provider: octodns_route53.Route53Provider
+  #   secret_kwarg: secret_access_key
+  #   options: {access_key_id: AKIAEXAMPLE}
+  #   zones: [clientsite.com]
+  # postiz_social:                   # Instagram & co. through a separately running Postiz
+  #   secret: postiz_api_key
+  #   base_url: http://postiz:5000/api
+  #   integrations: [clientsite-instagram]
+rules:
+  - action: dns.list_records
+    effect: allow
+  - action: dns.add_record
+    when:
+      zone: {in: [clientsite.com]}
+      type: {in: [TXT, CNAME]}
+    effect: approve
+    limit_per_day: 10
+  - action: dns.delete_record
+    effect: approve
+  - action: social.publish_post
+    effect: approve
+    limit_per_day: 5
+  - action: "*"
+    effect: deny
